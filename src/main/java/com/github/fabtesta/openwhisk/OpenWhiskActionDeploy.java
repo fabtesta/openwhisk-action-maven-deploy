@@ -69,7 +69,7 @@ public class OpenWhiskActionDeploy {
         Process process = Runtime.getRuntime().exec(command);
         String line = printGoodResults(process);
 
-        if(line.startsWith("ok"))
+        if(line.startsWith("ok: created action"))
         {
             return true;
         }
@@ -86,7 +86,7 @@ public class OpenWhiskActionDeploy {
         Process process = Runtime.getRuntime().exec(command);
         String line = printGoodResults(process);
 
-        if(line.startsWith("ok"))
+        if(line.startsWith("ok: updated action"))
         {
             return true;
         }
@@ -101,7 +101,7 @@ public class OpenWhiskActionDeploy {
         Process process = Runtime.getRuntime().exec(command);
         String line = printGoodResults(process);
 
-        if(line.startsWith("ok"))
+        if(line.startsWith("ok: created API"))
         {
             return true;
         }
@@ -128,7 +128,7 @@ public class OpenWhiskActionDeploy {
         }
 
         int exitVal = process.waitFor();
-        log.info("command exit value: " + exitVal);
+        log.info("wsk cli command exit value: " + exitVal);
         if(exitVal == 0)
         {
             return resultLine.toString();
