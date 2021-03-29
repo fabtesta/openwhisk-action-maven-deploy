@@ -1,82 +1,94 @@
 package com.github.fabtesta.openwhisk.maven;
 
 import com.github.fabtesta.openwhisk.OpenWhiskActionDeploy;
+import java.io.IOException;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * @goal action-deploy
- * @phase action-deploy
+ * @phase install
  */
 public class OpenWhiskActionDeployPlugin extends AbstractMojo {
 
     /**
-     * The package name for the generated classes
+     * The wsk cli executable full path
      * 
      * @parameter
      * @required
      */
-    private String packageName;
+    private String wskBinPath;
 
     /**
-     * The source folder to scan for PCML-Files
+     * The unique final action name
      * 
      * @parameter
      * @required
      */
-    private String sourceFolder;
+    private String actionName;
 
     /**
-     * Should we generate constants for each field?
+     * The action main class
      * 
      * @parameter
      */
-    private boolean generateConstants;
+    private String mainClass;
 
     /**
-     * automatically generate @Size(max=?) for each field.
-     * 
-     * @parameter
-     */
-    private boolean beanValidation;
-
-    /**
-     * The superclass for all PCML request beans
+     * The jar full path
      *
      * @parameter
      */
-    private String requestSuperClass;
+    private String artifactFullPath;
 
     /**
-     * The superclass for all PCML response beans
+     * If action must be web exportable
      *
      * @parameter
      */
-    private String responseSuperClass;
+    private boolean webEnabled;
+
+    /**
+     * The action API web path (webEnabled must be true)
+     *
+     * @parameter
+     */
+    private String actionApiPath;
+
+    /**
+     * The action API HTTP verb (webEnabled must be true and actionApiPath configured)
+     *
+     * @parameter
+     */
+    private String actionApiVerb;
+
+    /**
+     * The action API response type (webEnabled must be true, actionApiPath and actionApiVerb configured)
+     *
+     * @parameter
+     */
+    private String actionApiResponseType;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoFailureException {
 
         OpenWhiskActionDeploy
-          openWhiskActionDeploy = new OpenWhiskActionDeploy(generateConstants, beanValidation,packageName, sourceFolder
-          , requestSuperClass, responseSuperClass);
-        getLog().info("generating for " + packageName + " from " + sourceFolder);
-        if (generateConstants) {
-            getLog().info("generating constants for all fields");
-        }
-        if (beanValidation) {
-            getLog().info("annotating supported fields with @Size(max=?) Bean-Validation");
-        }
-
-        if (!requestSuperClass.isEmpty()) {
-            getLog().info("requests superclass " + requestSuperClass);
+          openWhiskActionDeploy = new OpenWhiskActionDeploy(wskBinPath, actionName, mainClass, artifactFullPath, webEnabled, actionApiPath
+          , actionApiVerb, actionApiResponseType, getLog());
+        getLog().info("wsk cli path " + wskBinPath);
+        getLog().info("deploying actionName " + actionName + " with main " + mainClass + " from artifact "+artifactFullPath);
+        getLog().info("web enabled? " + webEnabled);
+        if(webEnabled)  {
+            getLog().info("api path " + actionApiPath);
+            getLog().info("api verb " + actionApiVerb);
+            getLog().info("api response type " + actionApiResponseType);
         }
 
-        if (!responseSuperClass.isEmpty()) {
-            getLog().info("responses superclass " + responseSuperClass);
+        try {
+            openWhiskActionDeploy.deployAction();
+        } catch (IOException | InterruptedException e) {
+            getLog().error(e);
+            throw new MojoFailureException(e.getMessage());
         }
-
-        openWhiskActionDeploy.deployAction();
     }
 }

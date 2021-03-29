@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.fabtesta</groupId>
 	<artifactId>openwhisk-action-maven-deploy</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>maven-plugin</packaging>
 	<description>Deploy a OpenWhisk action on install phase</description>
 
