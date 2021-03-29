@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.fabtesta</groupId>
 	<artifactId>openwhisk-action-maven-deploy</artifactId>
-	<version>1.0.0</version>
+	<version>0.0.1</version>
 	<packaging>maven-plugin</packaging>
 	<description>Deploy a OpenWhisk action on install phase</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <github.global.server>github</github.global.server>
+		<github.global.server>github</github.global.server>
 	</properties>
 
     <licenses>
@@ -19,13 +19,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
